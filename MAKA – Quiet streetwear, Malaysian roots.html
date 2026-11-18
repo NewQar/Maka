@@ -41,16 +41,34 @@ button{font:inherit;color:inherit;cursor:pointer}
 .wrap{max-width:1320px;margin:0 auto;padding:0 28px} /* max page width — change 1320px to narrow/widen */
 
 /* ===== 2. HEADER & BUTTONS ===== */
-header{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:30;color:#fff;transition:background .3s,color .3s} /* transparent over hero */
-header.solid{background:var(--paper);color:var(--ink);border-bottom:1px solid var(--line)} /* after scrolling */
-.ann{background:var(--forest);color:#f1f2ee;text-align:center;font-size:13px;padding:7px 12px;letter-spacing:.04em} /* announcement bar */
-.nav{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:16px 28px} /* 3-col: left links | MAKA logo | bag */
-.nav .l{display:flex;gap:22px;align-items:center} /* left nav links spacing */
-.nav a,.bag{font:500 12px var(--b);letter-spacing:.16em;text-transform:uppercase}
-.nav .l a.prt{opacity:.7;font-size:11px} /* partner nav links — slightly smaller and dimmer */
+header{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:30;color:#fff;transition:background .3s,color .3s} /* transparent over hero on desktop */
+header.solid{background:var(--paper);color:var(--ink);border-bottom:1px solid var(--line)} /* solid background after scrolling */
+.ann{background:var(--forest);color:#f1f2ee;text-align:center;font-size:13px;padding:7px 12px;letter-spacing:.04em} /* green announcement bar at the top */
+.nav{display:grid;grid-template-columns:auto 1fr auto;align-items:center;padding:0 20px;height:60px;gap:12px} /* 3 cols: hamburger | logo (centred) | bag */
+.nav .l{display:flex;gap:0;align-items:center} /* left nav links group — hidden on mobile, shown on desktop */
+.nav a,.bag{font:500 11px var(--b);letter-spacing:.18em;text-transform:uppercase} /* all nav text: same size, same spacing */
+.nav .l a{padding:0 14px;opacity:.75;transition:opacity .2s} /* equal padding either side of each link */
+.nav .l a:hover{opacity:1}
+.nav .l .sep{width:1px;height:14px;background:currentColor;opacity:.2;margin:0 4px;flex-shrink:0} /* thin divider between main links and partner links */
+.nav .l a.prt{opacity:.5} /* partner links (Riwayat, Chetak) are a touch dimmer */
 .nav .l a.prt:hover{opacity:1}
-.logo{font:500 34px var(--h)!important;letter-spacing:.32em!important}
-.bag{background:none;border:0;justify-self:end}
+.logo{font:400 26px var(--h)!important;letter-spacing:.38em!important;justify-self:center;grid-column:2} /* logo always centred in the middle column */
+.bag{background:none;border:0;padding:0;opacity:.75;transition:opacity .2s;white-space:nowrap} /* bag button, right side */
+.bag:hover{opacity:1}
+/* hamburger button — hidden on desktop, shown on mobile */
+.hmb{display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:0;padding:4px;cursor:pointer;grid-column:1}
+.hmb span{display:block;width:22px;height:2px;background:currentColor;transition:transform .25s,opacity .25s;border-radius:2px}
+.hmb.on span:nth-child(1){transform:translateY(7px) rotate(45deg)} /* top bar rotates to form X */
+.hmb.on span:nth-child(2){opacity:0}                                 /* middle bar fades out */
+.hmb.on span:nth-child(3){transform:translateY(-7px) rotate(-45deg)} /* bottom bar rotates to form X */
+/* full-screen mobile menu — slides in when hamburger is tapped */
+#mobileMenu{display:none;position:fixed;inset:0;z-index:29;background:var(--paper);color:var(--ink);flex-direction:column;padding:calc(72px + env(safe-area-inset-top,0px)) 32px calc(32px + env(safe-area-inset-bottom,0px));gap:0;overflow-y:auto}
+#mobileMenu.on{display:flex}
+#mobileMenu a{font:400 clamp(26px,7vw,40px)/1.3 var(--h);letter-spacing:.03em;padding:12px 0;border-bottom:1px solid var(--line);opacity:.85;transition:opacity .15s}
+#mobileMenu a:last-of-type{border-bottom:0}
+#mobileMenu a:hover{opacity:1}
+#mobileMenu .mb-prt{font-size:clamp(18px,5vw,26px);opacity:.5} /* Riwayat and Chetak links smaller */
+#mobileMenu .mb-bag{margin-top:28px;font:500 12px var(--b);letter-spacing:.18em;text-transform:uppercase;border-bottom:0!important;opacity:.7}
 .btn{display:inline-block;border:1px solid currentColor;background:transparent;padding:13px 28px;font:500 12px var(--b);letter-spacing:.16em;text-transform:uppercase;transition:.25s}
 .btn:hover{background:#fff;color:#161a17;border-color:#fff}
 .btn.dk{background:var(--ink);color:var(--paper);border-color:var(--ink)}
@@ -258,17 +276,23 @@ footer .copy{padding:0 28px;font-size:13px;opacity:.7}
 
 /* ===== 8. MOBILE ===== */
 @media(max-width:820px){
-.nav .l a:not(.keep){display:none} /* hide most nav links; keep Collections */
-.nav{padding:14px 18px}
+/* header: always solid on mobile so it's always visible */
+header{background:var(--paper);color:var(--ink);border-bottom:1px solid var(--line)}
+/* hide the desktop link row; show hamburger button instead */
+.nav .l{display:none}
+.hmb{display:flex}
+/* logo stays centred */
+.nav{grid-template-columns:40px 1fr 40px;padding:0 16px}
+/* layouts: stack into single column */
 .usp,.news,.split,#modal,footer .cols,.pstrip,.ck-panels,.ck-about{grid-template-columns:1fr}
 .ck-panel{border-right:0;border-bottom:1px solid rgba(255,255,255,.1)}
-.rail{grid-auto-columns:72%}
-#modal .media{min-height:320px}
+.rail{grid-auto-columns:78%} /* each product card shows ~78% width on phones */
+#modal .media{min-height:300px}
 .bar input{margin-left:0;width:100%}
 section{padding:60px 0}
-.logo{font-size:26px!important}
-.media>img{object-position:var(--pos-m,var(--pos,center))} /* use mobile focus point on phones */
-.rw-feed{grid-template-columns:1fr} /* stack social posts on mobile */
+.logo{font-size:22px!important;letter-spacing:.3em!important}
+.media>img{object-position:var(--pos-m,var(--pos,center))} /* mobile focus point for hero crops */
+.rw-feed{grid-template-columns:1fr} /* stack social embeds vertically */
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body>
@@ -277,17 +301,35 @@ section{padding:60px 0}
 <header id="hd">
 <div class="ann" id="ann"></div>
 <div class="nav">
+  <!-- hamburger: only visible on mobile -->
+  <button class="hmb" id="hmb" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <!-- desktop links: hidden on mobile -->
   <div class="l">
-    <a class="keep" href="#collections">Collections</a>
+    <a href="#collections">Collections</a>
     <a href="#marketplace">Marketplace</a>
     <a href="#story">Story</a>
-    <a class="prt" href="#riwayat">Riwayat</a>   <!-- media partner link, slightly dimmer -->
-    <a class="prt" href="#chetak">Chetak</a>      <!-- print partner link -->
+    <span class="sep" aria-hidden="true"></span>  <!-- thin divider before partner links -->
+    <a class="prt" href="#riwayat">Riwayat</a>
+    <a class="prt" href="#chetak">Chetak</a>
   </div>
+  <!-- centred logo -->
   <a class="logo" href="#top">MAKA</a>
+  <!-- bag button, right side -->
   <button class="bag" id="bag">Bag (0)</button>
 </div>
 </header>
+
+<!-- full-screen mobile menu (toggled by hamburger) -->
+<nav id="mobileMenu" aria-label="Mobile navigation">
+  <a href="#collections" data-close-menu>Collections</a>
+  <a href="#marketplace" data-close-menu>Marketplace</a>
+  <a href="#story"       data-close-menu>Story</a>
+  <a class="mb-prt"      href="#riwayat" data-close-menu>Riwayat</a>
+  <a class="mb-prt"      href="#chetak"  data-close-menu>Chetak Studio</a>
+  <button class="mb-bag" id="bagMobile" data-close-menu>Bag (0)</button>
+</nav>
 
 <!-- ===== MAIN SITE (shown on all hashes except #riwayat / #chetak) ===== -->
 <main id="mainSite">
@@ -496,9 +538,9 @@ const RIWAYAT = {
     /* Replace url with real TikTok / Instagram post URLs.
        TikTok embed URL format:  https://www.tiktok.com/embed/v2/{VIDEO_ID}
        Instagram embed URL:      https://www.instagram.com/p/{SHORTCODE}/embed/ */
-    { type: 'tiktok',    url: 'https://www.tiktok.com/embed/v2/ZSp7JhxN7', caption: 'Behind the seams', brand: 'MAKA × Chetak', featured: true },
+    { type: 'tiktok',    url: 'https://www.tiktok.com/embed/v2/7000000000000000001', caption: 'Behind the seams', brand: 'MAKA × Chetak', featured: true },
     { type: 'instagram', url: 'https://www.instagram.com/p/PLACEHOLDER1/embed/',    caption: 'Night market lookbook', brand: 'Riwayat × MAKA', featured: true },
-    { type: 'tiktok',    url: 'https://www.tiktok.com/embed/v2/ZSp7JenHq', caption: 'Collab announcement', brand: 'MAKA', featured: true },
+    { type: 'tiktok',    url: 'https://www.tiktok.com/embed/v2/7000000000000000002', caption: 'Collab announcement', brand: 'MAKA', featured: true },
     { type: 'instagram', url: 'https://www.instagram.com/p/PLACEHOLDER2/embed/',    caption: 'Client spotlight', brand: 'Riwayat' },
     { type: 'tiktok',    url: 'https://www.tiktok.com/embed/v2/7000000000000000003', caption: 'The making-of', brand: 'Chetak Studio' },
     { type: 'instagram', url: 'https://www.instagram.com/p/PLACEHOLDER3/embed/',    caption: 'Community recap', brand: 'Riwayat' }
@@ -855,6 +897,7 @@ function addToBag(id, size){
 function renderBag(){
   const count = bag.reduce((a,i)=>a+i.qty,0), list=$('#items');
   $('#bag').textContent = `Bag (${count})`;
+  const mb=$('#bagMobile'); if(mb) mb.textContent=`Bag (${count})`; /* keep mobile menu bag count in sync */
   list.innerHTML = count ? '' : '<p class="empty">Your bag is empty.</p>';
   bag.forEach((line,k) => {
     const p=product(line.id), row=document.createElement('div'); row.className='it';
@@ -905,17 +948,34 @@ document.addEventListener('keydown', e => {
 });
 $('#bsel').onchange  = e => { filter.brand=e.target.value; renderMarketplace(); };
 $('#q').oninput      = e => { filter.query=e.target.value.toLowerCase(); renderMarketplace(); };
-$('#bag').onclick    = () => { closeAll(); drawer.classList.add('on'); scrim.classList.add('on'); };
+const openBag = () => { toggleMenu(false); closeAll(); drawer.classList.add('on'); scrim.classList.add('on'); };
+$('#bag').onclick = openBag;
+$('#bagMobile').onclick = openBag;
 $('#co').onclick     = () => toast(bag.length?'Checkout is not connected yet':'Add something first');
 const hdr=$('#hd'), onScroll=()=>hdr.classList.toggle('solid',scrollY>80);
 addEventListener('scroll', onScroll, {passive:true});
+
+/* hamburger menu toggle */
+const hmb=$('#hmb'), menu=$('#mobileMenu');
+function toggleMenu(force){
+  const open = typeof force==='boolean' ? force : !menu.classList.contains('on');
+  menu.classList.toggle('on', open);
+  hmb.classList.toggle('on', open);
+  hmb.setAttribute('aria-expanded', open);
+  document.body.style.overflow = open ? 'hidden' : ''; /* prevent body scroll when menu open */
+}
+hmb.onclick = () => toggleMenu();
+/* close menu when any link inside it is tapped */
+menu.addEventListener('click', e => {
+  if(e.target.dataset.closeMenu !== undefined || e.target.closest('[data-close-menu]')) toggleMenu(false);
+});
 
 /* ---------- 11. ROUTING ---------- */
 /* Each partner page lives at a hash: #riwayat or #chetak.
    The main site hides itself and shows the right partner page.
    Going back to any other hash shows the main site again. */
 const PAGES = { riwayat:'pg-riwayat', chetak:'pg-chetak' };
-function route(){
+function route(){ toggleMenu(false);
   const hash = location.hash.replace('#','');
   const pid  = PAGES[hash];
   /* show/hide main site and footer */
